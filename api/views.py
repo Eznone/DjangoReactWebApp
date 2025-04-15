@@ -8,7 +8,7 @@ from rest_framework.decorators import api_view
 
 # Without api_view we dont get the cool UI
 @api_view(['GET', 'POST'])
-def students(request):
+def studentsView(request):
     if request.method == 'GET':
         # Get all data from Student table
         students = Student.objects.all()
@@ -25,3 +25,14 @@ def students(request):
         else:
             print(serializer.errors)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+@api_view(['GET', 'PUT', 'DELETE'])
+def studentDetailView(request, pk):
+    try:
+        student = Student.objects.get(pk=pk)
+    except Student.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    
+    if request.method == 'GET':
+        serializer = StudentSerializer(student)
+        return Response(serializer.data, status=status.HTTP_200_OK)

@@ -1,3 +1,21 @@
+# Existing entries
 .venv
 .env
 db.sqlite3
+
+# Python-related
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+
+# Django-related
+*.log
+media/
+staticfiles/
+
+# Environment-specific
+*.sqlite3
+
+# VS Code-specific
+.vscode/

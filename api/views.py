@@ -17,6 +17,7 @@ def studentsView(request):
         return Response(serializer.data, status=status.HTTP_200_OK)
     
     elif request.method == 'POST':
+        
         serializer = StudentSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()

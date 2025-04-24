@@ -6,7 +6,7 @@ from employees.models import Employee
 # Necessary imports for basic API functionality
 from .serializers import StudentSerializer, EmployeeSerializer
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import status, mixins, generics
 # Decorator function
 from rest_framework.decorators import api_view
 # Class based view
@@ -57,42 +57,57 @@ def studentDetailView(request, pk):
         return Response(status=status.HTTP_204_NO_CONTENT)
     
 
-class Employees(APIView):
+# class Employees(APIView):
+#     def get(self, request):
+#         employees = Employee.objects.all()
+#         serializer = EmployeeSerializer(employees, many=True)
+#         return Response(serializer.data, status=status.HTTP_200_OK)
+    
+#     def post(self, request):
+#         serializer = EmployeeSerializer(data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data, status=status.HTTP_201_CREATED)
+#         else:
+#             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+# class EmployeeDetail(APIView):
+#     def get_object(self, pk):
+#         try:
+#             return Employee.objects.get(pk=pk)
+#         except Employee.DoesNotExist:
+#             return Response(status=status.HTTP_404_NOT_FOUND)
+    
+#     def get(self, request, pk):
+#         employee = self.get_object(pk)
+#         serializer = EmployeeSerializer(employee)
+#         return Response(serializer.data, status=status.HTTP_200_OK)
+    
+#     def put(self, request, pk):
+#         employee = self.get_object(pk)
+#         serializer = EmployeeSerializer(employee, data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data, status=status.HTTP_200_OK)
+#         else:
+#             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+#     def delete(self, request, pk):
+#         employee = self.get_object(pk)
+#         employee.delete()
+#         return Response(status=status.HTTP_204_NO_CONTENT)
+
+class Employees(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
+    queryset = Employee.objects.all()
+    serializer_class = EmployeeSerializer
+
     def get(self, request):
-        employees = Employee.objects.all()
-        serializer = EmployeeSerializer(employees, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-    
+        # .list comes from mixins.ListModelMixin
+        return self.list(request)
+
     def post(self, request):
-        serializer = EmployeeSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        
-class EmployeeDetail(APIView):
-    def get_object(self, pk):
-        try:
-            return Employee.objects.get(pk=pk)
-        except Employee.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+        # .create comes from mixins.CreateModelMixin
+        return self.create(request)
     
-    def get(self, request, pk):
-        employee = self.get_object(pk)
-        serializer = EmployeeSerializer(employee)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-    
-    def put(self, request, pk):
-        employee = self.get_object(pk)
-        serializer = EmployeeSerializer(employee, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        
-    def delete(self, request, pk):
-        employee = self.get_object(pk)
-        employee.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+class EmployeeDetail(generics.GenericAPIView):
+    pass

@@ -6,7 +6,7 @@ from employees.models import Employee
 # Necessary imports for basic API functionality
 from .serializers import StudentSerializer, EmployeeSerializer
 from rest_framework.response import Response
-from rest_framework import status, mixins, generics
+from rest_framework import status, mixins, generics, viewsets
 # Decorator function
 from rest_framework.decorators import api_view
 # Class based view
@@ -126,14 +126,28 @@ def studentDetailView(request, pk):
 #         # .destroy comes from mixins.DestroyModelMixin
 #         return self.destroy(request, pk=pk)
 
-# Generics
-class Employees(generics.ListCreateAPIView):
-    queryset = Employee.objects.all()
-    serializer_class = EmployeeSerializer
+# # Generics
+# class Employees(generics.ListCreateAPIView):
+#     queryset = Employee.objects.all()
+#     serializer_class = EmployeeSerializer
 
 
-class EmployeeDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Employee.objects.all()
-    serializer_class = EmployeeSerializer
-    # Specifies the field to be used for lookup
-    lookup_field = 'pk'
+# class EmployeeDetail(generics.RetrieveUpdateDestroyAPIView):
+#     queryset = Employee.objects.all()
+#     serializer_class = EmployeeSerializer
+#     # Specifies the field to be used for lookup
+#     lookup_field = 'pk'
+
+# Viewsets
+class EmployeeViewSet(viewsets.ViewSet):
+    def list(self, request):
+        queryset = Employee.objects.all()
+        serializer = EmployeeSerializer(queryset, many=True)
+        return Response(serializer.data)
+    
+    def create(self, request):
+        serializer = EmployeeSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

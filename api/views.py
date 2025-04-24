@@ -97,28 +97,43 @@ def studentDetailView(request, pk):
 #         employee.delete()
 #         return Response(status=status.HTTP_204_NO_CONTENT)
 
-class Employees(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
+# # Mixins
+# class Employees(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
+#     queryset = Employee.objects.all()
+#     serializer_class = EmployeeSerializer
+
+#     def get(self, request):
+#         # .list comes from mixins.ListModelMixin
+#         return self.list(request)
+
+#     def post(self, request):
+#         # .create comes from mixins.CreateModelMixin
+#         return self.create(request)
+
+# class EmployeeDetail(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin, generics.GenericAPIView):
+#     queryset = Employee.objects.all()
+#     serializer_class = EmployeeSerializer
+
+#     def get(self, request, pk):
+#         # .retrieve comes from mixins.RetrieveModelMixin
+#         return self.retrieve(request, pk=pk)
+    
+#     def put(self, request, pk):
+#         # .update comes from mixins.UpdateModelMixin
+#         return self.update(request, pk=pk)
+    
+#     def delete(self, request, pk):
+#         # .destroy comes from mixins.DestroyModelMixin
+#         return self.destroy(request, pk=pk)
+
+# Generics
+class Employees(generics.ListCreateAPIView):
     queryset = Employee.objects.all()
     serializer_class = EmployeeSerializer
 
-    def get(self, request):
-        # .list comes from mixins.ListModelMixin
-        return self.list(request)
 
-    def post(self, request):
-        # .create comes from mixins.CreateModelMixin
-        return self.create(request)
-
-# Passing becuase we have it in URL
-class EmployeeDetail(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
+class EmployeeDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Employee.objects.all()
     serializer_class = EmployeeSerializer
-
-    def get(self, request, pk):
-        # .retrieve comes from mixins.RetrieveModelMixin
-        return self.retrieve(request, pk=pk)
-    
-    def put(self, request, pk):
-        # .update comes from mixins.UpdateModelMixin
-        return self.update(request, pk=pk)
-    
+    # Specifies the field to be used for lookup
+    lookup_field = 'pk'

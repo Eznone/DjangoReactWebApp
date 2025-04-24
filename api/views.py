@@ -108,6 +108,17 @@ class Employees(mixins.ListModelMixin, mixins.CreateModelMixin, generics.Generic
     def post(self, request):
         # .create comes from mixins.CreateModelMixin
         return self.create(request)
+
+# Passing becuase we have it in URL
+class EmployeeDetail(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
+    queryset = Employee.objects.all()
+    serializer_class = EmployeeSerializer
+
+    def get(self, request, pk):
+        # .retrieve comes from mixins.RetrieveModelMixin
+        return self.retrieve(request, pk=pk)
     
-class EmployeeDetail(generics.GenericAPIView):
-    pass
+    def put(self, request, pk):
+        # .update comes from mixins.UpdateModelMixin
+        return self.update(request, pk=pk)
+    

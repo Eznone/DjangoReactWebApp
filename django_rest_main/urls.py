@@ -27,4 +27,7 @@ urlpatterns = [
 
     # Employees endpoint
     path('employees/', include('employees.urls')),
+
+    # Blogs endpoint
+    path('blogs/', include('blogs.urls')),
 ]

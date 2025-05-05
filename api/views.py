@@ -3,8 +3,9 @@ from django.shortcuts import render, get_object_or_404
 # imports for models
 from students.models import Student
 from employees.models import Employee
+from blogs.models import Blog, Comment
 # Necessary imports for basic API functionality
-from .serializers import StudentSerializer, EmployeeSerializer
+from .serializers import StudentSerializer, EmployeeSerializer, BlogSerializer, CommentSerializer
 from rest_framework.response import Response
 from rest_framework import status, mixins, generics, viewsets
 # Decorator function
@@ -169,3 +170,26 @@ class EmployeeViewSet(viewsets.ViewSet):
         employee = get_object_or_404(Employee, pk=pk)
         employee.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+    
+
+# Blog viewset
+class BlogView(generics.ListCreateAPIView):
+    queryset = Blog.objects.all()
+    serializer_class = BlogSerializer
+
+# Comment viewset
+class CommentView(generics.ListCreateAPIView):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+
+# Blog detail viewset
+class BlogDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Blog.objects.all()
+    serializer_class = BlogSerializer
+    lookup_field = 'pk'
+
+# Comment detail viewset
+class CommentDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+    lookup_field = 'pk'

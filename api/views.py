@@ -12,6 +12,7 @@ from rest_framework import status, mixins, generics, viewsets
 from rest_framework.decorators import api_view
 # Class based view
 from rest_framework.views import APIView
+from .pagination import CustomPagination
 
 # Without api_view we dont get the cool UI
 @api_view(['GET', 'POST'])
@@ -140,37 +141,41 @@ def studentDetailView(request, pk):
 #     lookup_field = 'pk'
 
 # Viewsets
-class EmployeeViewSet(viewsets.ViewSet):
-    def list(self, request):
-        queryset = Employee.objects.all()
-        serializer = EmployeeSerializer(queryset, many=True)
-        return Response(serializer.data)
+# class EmployeeViewSet(viewsets.ViewSet):
+#     def list(self, request):
+#         queryset = Employee.objects.all()
+#         serializer = EmployeeSerializer(queryset, many=True)
+#         return Response(serializer.data)
     
-    def create(self, request):
-        serializer = EmployeeSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#     def create(self, request):
+#         serializer = EmployeeSerializer(data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data, status=status.HTTP_201_CREATED)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-    def retrieve(self, request, pk=None):
-        employee  = get_object_or_404(Employee, pk=pk)
-        serializer = EmployeeSerializer(employee)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+#     def retrieve(self, request, pk=None):
+#         employee  = get_object_or_404(Employee, pk=pk)
+#         serializer = EmployeeSerializer(employee)
+#         return Response(serializer.data, status=status.HTTP_200_OK)
     
-    def update(self, request, pk=None):
-        employee = get_object_or_404(Employee, pk=pk)
-        serializer = EmployeeSerializer(employee, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#     def update(self, request, pk=None):
+#         employee = get_object_or_404(Employee, pk=pk)
+#         serializer = EmployeeSerializer(employee, data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data, status=status.HTTP_200_OK)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-    def delete(self, request, pk=None):
-        employee = get_object_or_404(Employee, pk=pk)
-        employee.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+#     def delete(self, request, pk=None):
+#         employee = get_object_or_404(Employee, pk=pk)
+#         employee.delete()
+#         return Response(status=status.HTTP_204_NO_CONTENT)
     
+class EmployeeViewSet(viewsets.ModelViewSet):
+    queryset = Employee.objects.all()
+    serializer_class = EmployeeSerializer
+    pagination_class = CustomPagination
 
 # Blog viewset
 class BlogView(generics.ListCreateAPIView):

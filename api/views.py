@@ -177,7 +177,7 @@ def studentDetailView(request, pk):
 #         return Response(status=status.HTTP_204_NO_CONTENT)
     
 class EmployeeViewSet(viewsets.ModelViewSet):
-    queryset = Employee.objects.all()
+    queryset = Employee.objects.all().order_by('id')
     serializer_class = EmployeeSerializer
     pagination_class = CustomPagination
     filterset_class = EmployeeFilter

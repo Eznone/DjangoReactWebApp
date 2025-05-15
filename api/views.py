@@ -13,6 +13,10 @@ from rest_framework.decorators import api_view
 # Class based view
 from rest_framework.views import APIView
 from .pagination import CustomPagination
+# Filters
+from employees.filters import EmployeeFilter
+
+
 
 # Without api_view we dont get the cool UI
 @api_view(['GET', 'POST'])
@@ -176,6 +180,7 @@ class EmployeeViewSet(viewsets.ModelViewSet):
     queryset = Employee.objects.all()
     serializer_class = EmployeeSerializer
     pagination_class = CustomPagination
+    filterset_class = EmployeeFilter
 
 # Blog viewset
 class BlogView(generics.ListCreateAPIView):
@@ -198,3 +203,5 @@ class CommentDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
     lookup_field = 'pk'
+
+
